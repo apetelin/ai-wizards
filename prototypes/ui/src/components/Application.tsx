@@ -41,7 +41,7 @@ const Application: React.FC = () => {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              <div>AI Wizzards almighty generator</div>
+              <div>AI Wizards almighty generator</div>
             </Typography>
       </Toolbar>
       <Container maxWidth={false} sx={{flexGrow: 1}}>

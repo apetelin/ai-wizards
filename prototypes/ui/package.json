@@ -1,7 +1,7 @@
 {
-  "name": "ai-wizzards-ui",
+  "name": "ai-wizards-ui",
   "version": "0.0.1",
-  "description": "AI-Wizzards UI",
+  "description": "AI-Wizards UI",
   "license": "MIT",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack serve --config tools/webpack/webpack.config.dev.js",

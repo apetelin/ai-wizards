@@ -1,1 +1,1 @@
-Frontend AI Wizzards UI
+Frontend AI Wizards UI
