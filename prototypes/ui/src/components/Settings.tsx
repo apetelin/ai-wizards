@@ -1,9 +1,7 @@
 import React from 'react';
-import FormControl from "@mui/material/FormControl"
-import InputLabel from "@mui/material/InputLabel"
-import Select from "@mui/material/Select"
-import MenuItem from "@mui/material/MenuItem"
 import Typography from '@mui/material/Typography';
+import FormGroup from '@mui/material/FormGroup';
+import {CSelector} from './widgets/CSelector';
 
 export const Settings: React.FC = () => {
     return <form>
@@ -16,17 +14,10 @@ export const Settings: React.FC = () => {
             >
               <div>Select your main settings</div>
         </Typography>
-        <FormControl fullWidth>
-            <InputLabel id="deployment-target">Deployment target</InputLabel>
-            <Select
-                labelId="deployment-target"
-                id="deployment-target-select"
-                label="Deployment Target"
-            >
-                <MenuItem value={"Fabric on premises"}>Fabric on premises</MenuItem>
-                <MenuItem value={"Fabric GCP"}>Fabric GCP</MenuItem>
-                <MenuItem value={"VHS Podman"}>VHS Podman</MenuItem>
-            </Select>
-        </FormControl>
+        <FormGroup>
+            <CSelector name="build-tool" label='Build tool' values={[['mvn', 'Maven'], ['gradle', 'Gradle'], ['npm','npm script']]}/>
+            <CSelector name="deployment-target" label='Deployment Target' values={[['openshift', 'Openshift'], ['gcp', 'GCP'], ['aws','AWS']]}/>
+            <CSelector name="integration-platform" label='CI/CD platform' values={[['jenkins', 'Jenkins'], ['teamcity', 'Teamcity']]}/>
+        </FormGroup>
     </form>
 }
