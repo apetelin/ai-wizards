@@ -1,4 +1,4 @@
-Frontend AI Wizzards UI
+Frontend AI Wizards UI
 
 To run locally:
 1. Install nodejs (>=14) and npm
