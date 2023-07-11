@@ -1,9 +1,10 @@
 # Welcome, aiwizards, to the 2023 TDI Global Hackathon
 ## About your hackathon environment
-Your hackathon environment consists of three components:
+Your hackathon environment consists of four components:
 1. A GCP project (https://console.cloud.google.com/home/dashboard?project=hack-team-aiwizards)
 2. This GitHub repository (https://github.com/db-hackathon/aiwizards)
 3. A Terraform Cloud workspace (https://app.terraform.io/app/db-hackathon-2023/workspaces/hack-team-aiwizards)
+4. A namespace in a shared RedHat Openshift 4.13 cluster (XXX)
 
 You have considerable interactive access to your GCP project.
 Using the GitHub repository and the Terraform Cloud workspace are entirely optional.
@@ -56,6 +57,8 @@ The below APIs have been activated on your project. You cannot activate APIs you
 * storagetransfer.googleapis.com
 * texttospeech.googleapis.com
 * translate.googleapis.com
+* videointelligence.googleapis.com
+* vision.googleapis.com
 * workflowexecutions.googleapis.com
 * workflows.googleapis.com
 * workstations.googleapis.com
@@ -100,6 +103,7 @@ Every team member has the following roles granted at project level:
 * roles/speech.editor
 * roles/storage.admin
 * roles/storagetransfer.admin
+* roles/visionai.editor
 * roles/workflows.editor
 * roles/workstations.admin
 * roles/workstations.networkAdmin
@@ -151,6 +155,7 @@ The workload SA has the following roles granted at project level:
 * roles/storage.objectViewer
 * roles/storagetransfer.transferAgent
 * roles/storagetransfer.user
+* roles/visionai.admin
 * roles/workflows.invoker
 
 #### Limitations & Restrictions
@@ -208,3 +213,9 @@ A set of useful [Input variables](https://developer.hashicorp.com/terraform/lang
 * workload_identity_provider - The ID of the Workload Identity provider you cah use to authenticate from GitHub Actions to your GCP project.: projects/785558430619/locations/global/workloadIdentityPools/github-2023/providers/github-2023
 * workload_sa_email - The email address representation of the SA you can attach to your workloads (e.g. to a Cloud Run service). : workload@hack-team-aiwizards.iam.gserviceaccount.com
 * workload_sa_id - The fully qualified ID representation of the SA you can attach to your workloads (e.g. to a Cloud Run service). : projects/hack-team-aiwizards/serviceAccounts/workload@hack-team-aiwizards.iam.gserviceaccount.com
+
+### OpenShift (XXX)
+#### Interactive Access
+Log in to OpenShift via https://console-openshift-console.apps.dbh.dbhackathon.org/.
+No SSL cert has been provisioned, so you'll have to risk the warnings.
+On that page, choose to "Log in with" the "githubidp" option and use the GitHub handle you signed up with to complete the authentication.
