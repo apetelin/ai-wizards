@@ -104,18 +104,6 @@ pipeline {
                 sh 'jmeter -n -t test_plan.jmx -l result.jtl'
             }
         }
-        stage('Stages Status') {
-            steps {
-                script {
-                    if (currentBuild.result == 'SUCCESS') {
-                        echo 'All stages executed successfully.'
-                    } else {
-                        echo 'One or more stages failed.'
-                        notifyFailureToPullRequest('One or more stages failed.')
-                    }
-                }
-            }
-        }
         stage('Promote to OpenShift Production Environment') {
             when {
                 expression { input message: 'Are you sure you want to deploy to production?', submitter: 'authorized-submitter' }
@@ -134,15 +122,23 @@ pipeline {
         }
     }
     post {
+        always {
+            script {
+                // Check for stage failure status here. The status will be null if the stage has not failed.
+                if (currentBuild.result != 'SUCCESS') {
+                    echo 'One or more stages failed.'
+                    notifyFailureToPullRequest("Build failed at stage: ${currentBuild.currentStage}")
+                } else {
+                    echo 'All stages executed successfully.'
+                }
+            }
+            cleanWs()
+        }
         success {
             notifyBuildStatusToSlack('SUCCESS')
         }
         failure {
-            echo 'One or more stages failed.'
             notifyBuildStatusToSlack('FAILURE')
-        }
-        always {
-            cleanWs()
         }
     }
 }
