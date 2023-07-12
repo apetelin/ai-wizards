@@ -7,17 +7,27 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { Settings } from './Settings';
+import { SettingForm, Settings } from './Settings';
 
-import logo from '@assets/images/logo.png';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import { useSendToAI } from './useSendToAi';
+import { Loader } from './widgets/Loader';
 
 const defaultTheme = createTheme();
 
 const Application: React.FC = () => {
+
+  const [loadState, response, sendRequest] = useSendToAI();
+  const onSubmit = React.useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    const formData = new FormData(e.target as HTMLFormElement);
+    const theData = Object.fromEntries(formData.entries()) as unknown as SettingForm;
+    e.preventDefault();
+    e.stopPropagation();
+    sendRequest(`generate jenkins config for ${theData['build-tool']}, ${theData['deployment-target']}, ${theData['integration-platform']}`);
+  }, []);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -57,7 +67,9 @@ const Application: React.FC = () => {
                       height: 'calc(100% - 32px)',
                     }}
                   >
-                  <Settings/>
+                  <form onSubmit={onSubmit}>
+                      <Settings/>
+                  </form>
                 </Paper>
               </Grid>
               <Grid item xs={12}>
@@ -83,7 +95,8 @@ const Application: React.FC = () => {
                     height: 'calc(100% - 32px)',
                   }}
                 >
-            <div>Generated result</div>
+                  {loadState ? <Loader /> : <div>Waiting for a unicorn to appear...</div> }            
+                  
             </Paper>
           </Grid>          
         </Grid>
