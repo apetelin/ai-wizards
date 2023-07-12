@@ -16,7 +16,7 @@ export function useSendToAI(): [LoadState | undefined, string | undefined, (user
         }).then(result => result.json()).then(json => {
             setLoadState('done');
             setResult(json?.data?.data?.content);
-        });
+        }).catch(() => setLoadState('error'));
     }
 
     return [loadState, result, sendRequest];
