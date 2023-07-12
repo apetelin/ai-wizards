@@ -11,6 +11,8 @@ const chatopenai = new ChatOpenAI({ temperature: 0, openAIApiKey: process.env.OP
 const convertPipeline = async (req: Request, res: Response) => {
   const humanPrompt = req.body;
 
+  console.log(`got request to: convertPipeline`)
+
   if (!humanPrompt || Object.values(humanPrompt || {}).length === 0 || humanPrompt.trim().length === 0) {
     return res.status(400).json({
       success: false,
@@ -26,6 +28,11 @@ const convertPipeline = async (req: Request, res: Response) => {
       new HumanChatMessage("Convert the following Jenkins pipeline to GitHub Actions pipeline:\n"
         + humanPrompt),
     ]);
+
+    console.log(outboundContent.toJSON())
+
+
+
     res.status(200).json({
       success: true,
       data: outboundContent,
