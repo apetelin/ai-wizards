@@ -1,5 +1,4 @@
-# Welcome, aiwizards, to the 2023 TDI Global Hackathon
-## About your hackathon environment
+
 
 **MAGIC** created by **AI-Wizards** will help us to generate, convert and validate all sorts of CI/CD pipelines for your projects.
 1) Create pipelines from scratch to build, test, validate and most importantly deploy the code in the most secure and efficient manner
@@ -10,6 +9,9 @@ Let the Magic happen!
 
 
 -------------------------------------------------------------------------------------------------------------------------
+# Welcome, aiwizards, to the 2023 TDI Global Hackathon
+## About your hackathon environment
+
 Your hackathon environment consists of four components:
 1. A GCP project (https://console.cloud.google.com/home/dashboard?project=hack-team-aiwizards)
 2. This GitHub repository (https://github.com/db-hackathon/aiwizards)
