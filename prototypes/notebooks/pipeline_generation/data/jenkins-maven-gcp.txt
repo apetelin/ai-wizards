@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    environment {
+        GCP_PROJECT = 'my-gcp-project' // Replace with your GCP project name
+        GCP_SERVICE_ACCOUNT_KEY = credentials('gcp-service-account-key') // Replace with your Jenkins credentials ID for GCP service account key
+        GCP_APP_NAME = 'my-maven-app' // Replace with your GCP App Engine application name
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('Deploy to GCP') {
+            steps {
+                withCredentials([file(credentialsId: 'gcp-service-account-key', variable: 'GCP_KEY_FILE')]) {
+                    sh 'gcloud auth activate-service-account --key-file=$GCP_KEY_FILE'
+                    sh 'gcloud config set project $GCP_PROJECT'
+                    sh 'gcloud app deploy --version=$BUILD_NUMBER --quiet'
+                }
+            }
+        }
+    }
+}

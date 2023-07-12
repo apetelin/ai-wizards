@@ -1,0 +1,67 @@
+pipeline {
+    agent any
+
+    environment {
+        OPENSHIFT_URL = 'https://openshift.example.com' // Replace with your OpenShift URL
+        OPENSHIFT_PROJECT = 'my-project' // Replace with your OpenShift project name
+        OPENSHIFT_APP_NAME = 'my-java-app' // Replace with your OpenShift application name
+        GRADLE_VERSION = '7.0.2' // Replace with your desired Gradle version
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                withGradle(installation: "Gradle ${GRADLE_VERSION}") {
+                    sh 'gradle clean build'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                withGradle(installation: "Gradle ${GRADLE_VERSION}") {
+                    sh 'gradle test'
+                }
+            }
+        }
+
+        stage('Deploy to OpenShift') {
+            steps {
+                script {
+                    def ocCmd = "oc login $OPENSHIFT_URL"
+                    sh ocCmd
+
+                    def ocProjectCmd = "oc project $OPENSHIFT_PROJECT"
+                    sh ocProjectCmd
+
+                    def ocNewAppCmd = "oc new-app . --name=$OPENSHIFT_APP_NAME"
+                    sh ocNewAppCmd
+
+                    def ocExposeCmd = "oc expose svc/$OPENSHIFT_APP_NAME"
+                    sh ocExposeCmd
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                def ocCmd = "oc login $OPENSHIFT_URL"
+                sh ocCmd
+
+                def ocProjectCmd = "oc project $OPENSHIFT_PROJECT"
+                sh ocProjectCmd
+
+                def ocRolloutCmd = "oc rollout latest dc/$OPENSHIFT_APP_NAME"
+                sh ocRolloutCmd
+            }
+        }
+    }
+}

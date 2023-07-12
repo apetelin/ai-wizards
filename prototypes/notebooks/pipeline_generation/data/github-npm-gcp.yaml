@@ -1,0 +1,40 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  GCP_PROJECT_ID: <gcp_project_id>   # Replace with your GCP project ID
+  GCP_SERVICE_KEY: ${{ secrets.GCP_SERVICE_KEY }}   # Add your GCP service account key as a secret in your repository settings
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Configure Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.3.0
+        with:
+          project_id: ${{ env.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SERVICE_KEY }}
+
+      - name: Deploy to GCP
+        run: |
+          gcloud app deploy app.yaml   # Replace with the path to your GCP App Engine configuration file
+

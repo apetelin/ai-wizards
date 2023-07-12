@@ -1,0 +1,67 @@
+pipeline {
+    agent any
+
+    environment {
+        OPENSHIFT_URL = 'https://openshift.example.com' // Replace with your OpenShift URL
+        OPENSHIFT_PROJECT = 'my-project' // Replace with your OpenShift project name
+        OPENSHIFT_APP_NAME = 'my-java-app' // Replace with your OpenShift application name
+        MAVEN_VERSION = '3.8.3' // Replace with your desired Maven version
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                withMaven(maven: MAVEN_VERSION, mavenSettingsConfig: 'my-maven-settings') {
+                    sh 'mvn clean package'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                withMaven(maven: MAVEN_VERSION, mavenSettingsConfig: 'my-maven-settings') {
+                    sh 'mvn test'
+                }
+            }
+        }
+
+        stage('Deploy to OpenShift') {
+            steps {
+                script {
+                    def ocCmd = "oc login $OPENSHIFT_URL"
+                    sh ocCmd
+
+                    def ocProjectCmd = "oc project $OPENSHIFT_PROJECT"
+                    sh ocProjectCmd
+
+                    def ocNewAppCmd = "oc new-app . --name=$OPENSHIFT_APP_NAME"
+                    sh ocNewAppCmd
+
+                    def ocExposeCmd = "oc expose svc/$OPENSHIFT_APP_NAME"
+                    sh ocExposeCmd
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                def ocCmd = "oc login $OPENSHIFT_URL"
+                sh ocCmd
+
+                def ocProjectCmd = "oc project $OPENSHIFT_PROJECT"
+                sh ocProjectCmd
+
+                def ocRolloutCmd = "oc rollout latest dc/$OPENSHIFT_APP_NAME"
+                sh ocRolloutCmd
+            }
+        }
+    }
+}

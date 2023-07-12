@@ -1,0 +1,38 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  OPENSHIFT_URL: <openshift_url>   # Replace with your OpenShift cluster URL
+  OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}   # Add your OpenShift access token as a secret in your repository settings
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: 11
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Deploy to OpenShift
+        run: |
+          curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz
+          tar -xf oc.tar.gz
+          sudo mv oc /usr/local/bin
+
+          oc login --token $OPENSHIFT_TOKEN --server $OPENSHIFT_URL
+          oc project your-project-name   # Replace with your OpenShift project name
+
+          oc apply -f openshift/deployment.yaml   # Replace with the path to your OpenShift deployment configuration file
+
