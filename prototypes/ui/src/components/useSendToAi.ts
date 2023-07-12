@@ -10,10 +10,13 @@ export function useSendToAI(): [LoadState | undefined, string | undefined, (user
     function sendRequest(userPrompt: string) {
         setLoadState('pending');
         return fetch(`${bakendURL}/convertPipeline`, {
-            mode: "no-cors",
+            mode: "cors",
             method: 'post',
             body: userPrompt,
-        }).then(result => console.log(result));
+        }).then(result => result.json()).then(json => {
+            setLoadState('done');
+            setResult(json?.data?.data?.content);
+        });
     }
 
     return [loadState, result, sendRequest];
