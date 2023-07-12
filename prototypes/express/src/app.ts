@@ -17,30 +17,3 @@ app.use('/aiwizards', require('./routes/aiwizardsRoutes'));
 app.listen(port, () => console.log(`Server is listening on port ${port}`));
 
 export default app;
-
-
-
-
-// app.post('/convertPipeline', async (req: Request, res: Response) => {
-//     const inboundContent = req.body;
-//     if (!inboundContent || Object.values(inboundContent || {}).length === 0 || inboundContent.trim().length === 0) {
-//         return res.status(400).send('Bad Request: Missing required content');
-//     }
-//     try {
-//         const outboundContent = await convertPipeline(inboundContent);
-//         return res.send(outboundContent);
-//     } catch (error) {
-//         return res.status(500).send('Server Error: Something went wrong');
-//     }
-// });
-
-// async function convertPipeline(content: any): Promise<any> {
-//     const chat = new ChatOpenAI({temperature: 0, openAIApiKey: openai_api_key});
-//     return await chat.call([
-//         new SystemChatMessage(
-//             "You're a professional DevOps engineer with 5+ years of experience."
-//         ),
-//         new HumanChatMessage("Convert the following Jenkins pipeline to GitHub Actions pipeline:\n"
-//             + content),
-//     ]);
-// }
