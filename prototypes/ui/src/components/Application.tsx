@@ -6,6 +6,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import './Application.sass';
 
 import { SettingForm, Settings } from './Settings';
 
@@ -26,7 +27,7 @@ const Application: React.FC = () => {
     const theData = Object.fromEntries(formData.entries()) as unknown as SettingForm;
     e.preventDefault();
     e.stopPropagation();
-    sendRequest(`generate jenkins config for ${theData['build-tool']}, ${theData['deployment-target']}, ${theData['integration-platform']}`);
+    sendRequest(`generate ${theData['integration-platform']} config for ${theData['build-tool']}, ${theData['deployment-target']}`);
   }, []);
 
   return (
@@ -68,7 +69,7 @@ const Application: React.FC = () => {
                     }}
                   >
                   <form onSubmit={onSubmit}>
-                      <Settings/>
+                      <Settings pending={loadState === 'pending'}/>
                   </form>
                 </Paper>
               </Grid>
@@ -95,7 +96,7 @@ const Application: React.FC = () => {
                     height: 'calc(100% - 32px)',
                   }}
                 >
-                  {loadState ? <Loader /> : <div>Waiting for a unicorn to appear...</div> }            
+                  {!loadState ? <div>Waiting for a unicorn to appear...</div> : loadState === "pending" ? <Loader /> : loadState === "error" ? <div>Oh no! All the unicors died! 😱😱😱 Try again!</div>: <pre>{response}</pre> }            
                   
             </Paper>
           </Grid>          
