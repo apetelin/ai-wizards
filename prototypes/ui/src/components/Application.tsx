@@ -95,7 +95,7 @@ const Application: React.FC = () => {
                     height: 'calc(100% - 32px)',
                   }}
                 >
-                  {loadState ? <Loader /> : <div>Waiting for a unicorn to appear...</div> }            
+                  {!loadState ? <div>Waiting for a unicorn to appear...</div> : loadState === "pending" ? <Loader /> : <pre>{response}</pre> }            
                   
             </Paper>
           </Grid>          

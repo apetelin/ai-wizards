@@ -1,7 +1,7 @@
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { HumanChatMessage, SystemChatMessage } from "langchain/schema";
 import * as dotenv from 'dotenv';
-import {Request, Response} from 'express';
+import { Request, Response } from 'express';
 
 dotenv.config({ path: require('find-config')('.env') });
 console.log(`process.env.OPENAI_API_KEY: ${process.env.OPENAI_API_KEY}`)
@@ -17,7 +17,7 @@ const convertPipeline = async (req: Request, res: Response) => {
       error: 'Bad Request: Missing required content',
     });
   }
-
+  console.log(`Request: ${humanPrompt}`);
   try {
     const outboundContent = await chatopenai.call([
       new SystemChatMessage(
@@ -26,10 +26,12 @@ const convertPipeline = async (req: Request, res: Response) => {
       new HumanChatMessage("Convert the following Jenkins pipeline to GitHub Actions pipeline:\n"
         + humanPrompt),
     ]);
-    res.status(200).json({
+
+    return res.status(200).json({
       success: true,
       data: outboundContent,
     });
+
   } catch (error) {
     return res.status(500).json({
       success: false,
