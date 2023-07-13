@@ -16,6 +16,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { useSendToAI } from './useSendToAi';
 import { Loader } from './widgets/Loader';
+import { Fireflies } from './widgets/Fireflies';
 
 const defaultTheme = createTheme();
 
