@@ -42,7 +42,6 @@ const Application: React.FC = () => {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-    {loadState === 'done' && <Fireflies/>}
     <Box component="main"
           sx={{
             backgroundColor: (theme) =>
