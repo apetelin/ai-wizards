@@ -1,7 +1,8 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
+import { pipelineActions } from './stores/filePipelineStore'
 
-dotenv.config({path: require('find-config')('.env')});
+dotenv.config({ path: require('find-config')('.env') });
 console.log(`process.env.PORT: ${process.env.PORT}`)
 
 const app = express();
@@ -13,6 +14,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/aiwizards', require('./routes/aiwizardsRoutes'));
+
+pipelineActions.load();
 
 app.listen(port, () => console.log(`Server is listening on port ${port}`));
 
