@@ -16,6 +16,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { useSendToAI } from './useSendToAi';
 import { Loader } from './widgets/Loader';
+import { Fireflies } from './widgets/Fireflies';
 
 const defaultTheme = createTheme();
 
@@ -41,6 +42,7 @@ const Application: React.FC = () => {
 
   return (
     <ThemeProvider theme={defaultTheme}>
+    {loadState === 'done' && <Fireflies/>}
     <Box component="main"
           sx={{
             backgroundColor: (theme) =>
