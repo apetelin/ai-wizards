@@ -21,13 +21,22 @@ const defaultTheme = createTheme();
 
 const Application: React.FC = () => {
 
+  const [validInputs, setValidInputs] = React.useState(true);
+
   const [loadState, response, sendRequest] = useSendToAI();
   const onSubmit = React.useCallback((e: React.FormEvent<HTMLFormElement>) => {
     const formData = new FormData(e.target as HTMLFormElement);
     const theData = Object.fromEntries(formData.entries()) as unknown as SettingForm;
     e.preventDefault();
     e.stopPropagation();
-    sendRequest(`generate ${theData['integration-platform']} config for ${theData['build-tool']}, ${theData['deployment-target']}`);
+    if (theData['integration-platform'] && theData['build-tool'] && theData['deployment-target']) {
+      sendRequest(`generate ${theData['integration-platform']} config for ${theData['build-tool']}, ${theData['deployment-target']}`);
+      setValidInputs(true);
+    }
+    else{
+      setValidInputs(false);
+    }
+    
   }, []);
 
   return (
@@ -69,7 +78,7 @@ const Application: React.FC = () => {
                     }}
                   >
                   <form onSubmit={onSubmit}>
-                      <Settings pending={loadState === 'pending'}/>
+                      <Settings validInput={validInputs} pending={loadState === 'pending'}/>
                   </form>
                 </Paper>
               </Grid>
