@@ -6,6 +6,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import './Application.sass';
 
 import { SettingForm, Settings } from './Settings';
 
@@ -15,10 +16,13 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { useSendToAI } from './useSendToAi';
 import { Loader } from './widgets/Loader';
+import { Fireflies } from './widgets/Fireflies';
 
 const defaultTheme = createTheme();
 
 const Application: React.FC = () => {
+
+  const [validInputs, setValidInputs] = React.useState(true);
 
   const [loadState, response, sendRequest] = useSendToAI();
   const onSubmit = React.useCallback((e: React.FormEvent<HTMLFormElement>) => {
@@ -27,6 +31,14 @@ const Application: React.FC = () => {
     e.preventDefault();
     e.stopPropagation();
     sendRequest(`generate jenkins config for ${theData['build-tool']}, ${theData['deployment-target']}, ${theData['integration-platform']}`);
+    if (theData['integration-platform'] && theData['build-tool'] && theData['deployment-target']) {
+      sendRequest(`generate ${theData['integration-platform']} config for ${theData['build-tool']}, ${theData['deployment-target']}`);
+      setValidInputs(true);
+    }
+    else{
+      setValidInputs(false);
+    }
+    
   }, []);
 
   return (
@@ -68,7 +80,7 @@ const Application: React.FC = () => {
                     }}
                   >
                   <form onSubmit={onSubmit}>
-                      <Settings/>
+                      <Settings validInput={validInputs} pending={loadState === 'pending'}/>
                   </form>
                 </Paper>
               </Grid>
@@ -95,7 +107,7 @@ const Application: React.FC = () => {
                     height: 'calc(100% - 32px)',
                   }}
                 >
-                  {loadState ? <Loader /> : <div>Waiting for a unicorn to appear...</div> }            
+                  {!loadState ? <div>Waiting for a unicorn to appear...</div> : loadState === "pending" ? <Loader /> : loadState === "error" ? <div>Oh no! All the unicors died! 😱😱😱 Try again!</div>: <pre>{response}</pre> }            
                   
             </Paper>
           </Grid>          

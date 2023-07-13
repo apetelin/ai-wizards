@@ -30,6 +30,7 @@ const convertPipeline = async (req: Request, res: Response) => {
     });
   }
 
+  console.log(`Request: ${humanPrompt}`);
   try {
     const outboundContent = await chatopenai.call([
       new SystemChatMessage(
